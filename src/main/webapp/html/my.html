@@ -29,6 +29,8 @@
         <th>Level</th>
         <th>Birthday</th>
         <th>Banned</th>
+        <th>Edit</th>
+        <th>Delete</th>
     </tr>
     </thead>
     <tbody>
@@ -63,18 +65,26 @@
 <!--            очистить таблицу-->
 
 	   data.forEach(function(player, index) {
-                tbody.append(`
-                    <tr>
-                        <td>${page * size + index + 1}</td>
-                        <td>${player.name}</td>
-                        <td>${player.title}</td>
-                        <td>${player.race}</td>
-                        <td>${player.profession}</td>
-                        <td>${player.level}</td>
-                        <td>${player.birthday}</td>
-                        <td>${player.banned}</td>
-                    </tr>
-                `);
+                const rowHtml = `
+                <tr>
+                    <td>${page * size + index + 1}</td>
+                    <td>${player.name}</td>
+                    <td>${player.title}</td>
+                    <td>${player.race}</td>
+                    <td>${player.profession}</td>
+                    <td>${player.level}</td>
+                    <td>${player.birthday}</td>
+                    <td>${player.banned}</td>
+                    <td>
+                        <img src="/img/edit.png" alt="Edit" width="20" height="20" style="cursor:pointer" onclick="editPlayer(${player.id})">
+                    </td>
+                    <td>
+                        <img src="/img/delete.png" alt="Delete" width="20" height="20" style="cursor:pointer" onclick="deletePlayer(${player.id})">
+                    </td>
+
+                </tr>
+            `;
+            tbody.append(rowHtml);
             });
         });
     }
