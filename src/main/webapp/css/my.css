@@ -1,0 +1,16 @@
+<style>
+    .pagination-btn {
+        margin: 2px;
+        pagging: 5px 10px;
+        cursor: pointer;
+    }
+
+    .pagination-btn.active {
+        background-color: buttonface;
+        color: red;
+        font-weight: bold;
+        border-radius: 3px;
+    }
+
+
+</style>

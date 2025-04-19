@@ -86,10 +86,10 @@
         paginationDiv.empty();
 
         for (let i = 0; i < totalPages; i++) {
-            const btn = $(`<button>${i + 1}</button>`);
+            const btn = $(`<button class="pagination-btn">${i + 1}</button>`);
 
             if (i === currentPage) {
-                btn.css('font-weight', 'bold');
+                btn.addClass('active');
 
 
             }
