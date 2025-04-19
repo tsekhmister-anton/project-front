@@ -66,7 +66,7 @@
 
 	   data.forEach(function(player, index) {
                 const rowHtml = `
-                <tr>
+                <tr id="player-row-${player.id}">
                     <td>${page * size + index + 1}</td>
                     <td>${player.name}</td>
                     <td>${player.title}</td>
@@ -76,10 +76,10 @@
                     <td>${player.birthday}</td>
                     <td>${player.banned}</td>
                     <td>
-                        <img src="/img/edit.png" alt="Edit" width="20" height="20" style="cursor:pointer" onclick="editPlayer(${player.id})">
+                        <img src="/img/edit.png" alt="Edit" width="20" height="20" class="edit-btn" style="cursor:pointer" onclick="editPlayer(${player.id})">
                     </td>
                     <td>
-                        <img src="/img/delete.png" alt="Delete" width="20" height="20" style="cursor:pointer" onclick="deletePlayer(${player.id})">
+                        <img src="/img/delete.png" alt="Delete" width="20" height="20" class="delete-btn" style="cursor:pointer" onclick="deletePlayer(${player.id})">
                     </td>
 
                 </tr>
@@ -137,6 +137,33 @@
             },
         });
     }
+<!--    функция редактирования аккаунта-->
+    function editPlayer(id){
+        const row = $(`#player-row-${id}`);
+
+<!--        скрываю иконку delete-->
+        row.find('.delete-btn').hide();
+
+<!--        меняем иконку edit на save-->
+        const editIcon = row.find('.edit-btn');
+        editIcon.attr('src', '/img/save.png');
+        editIcon.attr('alt', 'Save');
+
+<!--        меняем обработчик на savePlayer-->
+        editIcon.off('click');
+        editIcon.on('click', function() {
+            savePlayer(id)
+        });
+    }
+
+<!--    savePlayer(id) заглушка-->
+    function savePlayer(id) {
+        alert("Save player ID: " + id);
+        // TODO: Здесь будет логика отправки PUT-запроса
+        fetchPlayerCount();
+    }
+
+
 </script>
 
 </body>
