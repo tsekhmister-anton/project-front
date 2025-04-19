@@ -140,6 +140,7 @@
 <!--    функция редактирования аккаунта-->
     function editPlayer(id){
         const row = $(`#player-row-${id}`);
+        const cells = row.find('td');
 
 <!--        скрываю иконку delete-->
         row.find('.delete-btn').hide();
@@ -148,14 +149,42 @@
         const editIcon = row.find('.edit-btn');
         editIcon.attr('src', '/img/save.png');
         editIcon.attr('alt', 'Save');
+        editIcon.attr('title', 'Save');
 
 <!--        меняем обработчик на savePlayer-->
         editIcon.off('click');
         editIcon.on('click', function() {
             savePlayer(id)
         });
+
+<!--        делаем ячейки таблицы редактируемыми-->
+        cells.eq(1).attr('contenteditable', true);
+        cells.eq(2).attr('contenteditable', true);
+<!--            Race — выпадающий список-->
+         const raceOptions = ['HUMAN', 'DWARF', 'ELF', 'GIANT', 'ORC', 'TROLL', 'HOBBIT'];
+        const raceSelect = createSelect(raceOptions, cells.eq(3).text());
+        cells.eq(3).html(raceSelect);
+
+<!--        Profession — выпадающий список-->
+        const profOptions = ['WARRIOR', 'ROGUE', 'SORCERER', 'CLERIC', 'PALADIN', 'NAZGUL', 'WARLOCK', 'DRUID'];
+        const profSelect = createSelect(profOptions, cells.eq(4).text());
+        cells.eq(4).html(profSelect);
+
+<!--        Banned — выпадающий список true/false-->
+        const bannedSelect = createSelect(['true', 'false'], cells.eq(7).text());
+        cells.eq(7).html(bannedSelect);
     }
 
+<!--    функция создания выбора(select) значения ячейки-->
+    function createSelect(options, selectValue) {
+        let select = '<select class="editable-select">';
+        options.forEach(option => {
+            const selected = option ===selectValue ? 'selected' : '';
+            select += `<option value="${option}" ${selected}>${option}</option>`;
+        });
+        select += '</select>';
+        return select;
+    }
 <!--    savePlayer(id) заглушка-->
     function savePlayer(id) {
         alert("Save player ID: " + id);
