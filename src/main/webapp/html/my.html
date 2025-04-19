@@ -10,9 +10,9 @@
 <div style="margin-top: 20 px;"> <!--выпадающий список-->
     <label for="pageSize">Count per page: </label>
     <select id="pageSize">
-        <option value="3" selected>3</option>
+        <option value="3">3</option>
         <option value="5">5</option>
-        <option value="10">10</option>
+        <option value="10" selected>10</option>
         <option value="20">20</option>
     </select>
 </div>
@@ -124,6 +124,19 @@
         fetchPlayerCount();
 
     });
+
+<!--    функция удаления аккаунта-->
+    function deletePlayer(id) {
+        $.ajax({
+            url: `/rest/players/${id}`,
+            type: 'DELETE',
+            success: function () {
+<!--            Обновляем общее количество и таблицу-->
+<!--            это заново посчитает страницы и вызовет loadPlayerData()-->
+                fetchPlayerCount();
+            },
+        });
+    }
 </script>
 
 </body>
