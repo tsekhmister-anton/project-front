@@ -7,6 +7,17 @@
 <body>
 <h1>RPG admin panel</h1>
 
+<div style="margin-top: 20 px;"> <!--выпадающий список-->
+    <label for="pageSize">Count per page: </label>
+    <select id="pageSize">
+        <option value="3" selected>3</option>
+        <option value="5">5</option>
+        <option value="10">10</option>
+        <option value="20">20</option>
+    </select>
+</div>
+
+
 <table id="playerTable" border="1">
     <thead>
     <tr>
@@ -25,34 +36,83 @@
     </tbody>
 </table>
 
-<script>
-<!--    Функция для отправки GET запроса на сервер-->
-    function loadPlayerData() {
-        $.get("/rest/players", function(data) {
-<!--            Добавление данных в таблицу-->
-            data.forEach(function(player, index) {
-                const table = document.getElementById("playerTable").getElementsByTagName('tbody')[0];
-                const newRow = table.insertRow(table.rows.length);
+<div id="pagination" style="margin-top: 10px;"></div>
+<!--кнопки пейджинга-->
 
-<!--                Заполнение строк таблицы данными из ответа сервера-->
-                newRow.innerHTML = `
-                    <td>${index + 1}</td>
-                    <td>${player.name}</td>
-                    <td>${player.title}</td>
-                    <td>${player.race}</td>
-                    <td>${player.profession}</td>
-                    <td>${player.level}</td>
-                    <td>${player.birthday}</td>
-                    <td>${player.banned}</td>
-                `;
+
+<script>
+
+    let totalPlayers = 0;
+    let currentPage = 0;
+    let pageSize = parseInt($('#pageSize').val());
+
+<!--    Загрузка общего количества игроков-->
+    function fetchPlayerCount() {
+        $.get("/rest/players/count", function(count) {
+            totalPlayers = count;
+            renderPagination();
+            loadPlayerData(currentPage, pageSize);
+        });
+    }
+
+<!--	Загрузка игроков с учетом номера страницы и размера-->
+    function loadPlayerData(page, size) {
+        $.get("/rest/players", { pageNumber: page, pageSize: size }, function(data) {
+            const tbody = $('#playerTable tbody');
+            tbody.empty();
+<!--            очистить таблицу-->
+
+	   data.forEach(function(player, index) {
+                tbody.append(`
+                    <tr>
+                        <td>${page * size + index + 1}</td>
+                        <td>${player.name}</td>
+                        <td>${player.title}</td>
+                        <td>${player.race}</td>
+                        <td>${player.profession}</td>
+                        <td>${player.level}</td>
+                        <td>${player.birthday}</td>
+                        <td>${player.banned}</td>
+                    </tr>
+                `);
             });
         });
     }
 
-<!--    Вызов функции при загрузке страницы-->
+<!--    Отображение кнопок пейджинга-->
+    function renderPagination() {
+        const totalPages = Math.ceil(totalPlayers / pageSize);
+        const paginationDiv = $('#pagination');
+        paginationDiv.empty();
+
+        for (let i = 0; i < totalPages; i++) {
+            const btn = $(`<button>${i + 1}</button>`);
+
+            if (i === currentPage) {
+                btn.css('font-weight', 'bold');
+
+
+            }
+            btn.on('click', function() {
+                currentPage = i;
+                loadPlayerData(currentPage, pageSize);
+                renderPagination();
+            });
+            paginationDiv.append(btn);
+        }
+    }
+
+<!--    Смена значения количество строк на странице (в select)-->
+    $('#pageSize').on('change', function() {
+        pageSize = parseInt($(this).val());
+        currentPage = 0;
+        fetchPlayerCount(); // пересчитать и отрисовать
+    });
+
+<!--    Запросить всё при загрузке страницы-->
     $(document).ready(function() {
-        loadPlayerData();
-<!--        Загружаем данные при запуске страницы-->
+        fetchPlayerCount();
+
     });
 </script>
 
