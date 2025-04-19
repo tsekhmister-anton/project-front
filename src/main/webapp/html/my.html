@@ -1,11 +1,60 @@
 <html>
 <head>
     <title>RPG</title>
-    <script src=https://code.jquery.com/jquery-3.6.0.min.js></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="/css/my.css" rel="stylesheet">
 </head>
 <body>
 <h1>RPG admin panel</h1>
+
+<table id="playerTable" border="1">
+    <thead>
+    <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Title</th>
+        <th>Race</th>
+        <th>Profession</th>
+        <th>Level</th>
+        <th>Birthday</th>
+        <th>Banned</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Данные будут загружаться сюда -->
+    </tbody>
+</table>
+
+<script>
+<!--    Функция для отправки GET запроса на сервер-->
+    function loadPlayerData() {
+        $.get("/rest/players", function(data) {
+<!--            Добавление данных в таблицу-->
+            data.forEach(function(player, index) {
+                const table = document.getElementById("playerTable").getElementsByTagName('tbody')[0];
+                const newRow = table.insertRow(table.rows.length);
+
+<!--                Заполнение строк таблицы данными из ответа сервера-->
+                newRow.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${player.name}</td>
+                    <td>${player.title}</td>
+                    <td>${player.race}</td>
+                    <td>${player.profession}</td>
+                    <td>${player.level}</td>
+                    <td>${player.birthday}</td>
+                    <td>${player.banned}</td>
+                `;
+            });
+        });
+    }
+
+<!--    Вызов функции при загрузке страницы-->
+    $(document).ready(function() {
+        loadPlayerData();
+<!--        Загружаем данные при запуске страницы-->
+    });
+</script>
 
 </body>
 </html>
