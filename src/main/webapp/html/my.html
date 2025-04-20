@@ -7,6 +7,14 @@
 <body onload="show_list()">
 <h1>RPG admin panel</h1>
 
+<label for="count_1">Count per page:</label>
+<select id="count_1" onchange="show_list()">
+    <option value="3">3</option>
+    <option value="5">5</option>
+    <option value="10">10</option>
+    <option value="20">20</option>
+</select>
+
 <table id="table_1">
     <thead>
     <tr>
@@ -22,8 +30,12 @@
     </thead>
 </table>
 
+<div id="paging_buttons">Pages:</div>
+
 <script>
     function show_list() {
+        $("tr:has(td)").remove();
+
         let url = "/rest/players";
         $.get(url, function(response) {
             $.each(response, function(i, item) {
@@ -39,6 +51,39 @@
                 ).appendTo("#table_1");
             });
         });
+
+        let totalCount = getTotalCount();
+        let countPerPage = $("#count_1").val();
+
+        if (countPerPage == null) {
+            countPerPage = 3;
+        }
+
+        let pagesCount = Math.ceil(totalCount / countPerPage);
+
+        $("button.pgn-bnt-styled").remove();
+
+        for (let i = 0; i < pagesCount; i++) {
+            let button_tag = "<button>" + (i + 1) + "</button>";
+            let btn = $(button_tag)
+                .attr('id', 'paging_button_' + i)
+                .attr('onclick', "show_list()")
+                .addClass('pgn-bnt-styled');
+            $('#paging_buttons').append(btn);
+        }
+    }
+
+    function getTotalCount() {
+        let url = "/rest/players/count";
+        let res = 0;
+        $.ajax({
+            url: url,
+            async: false,
+            success: function(result) {
+                res = parseInt(result);
+            }
+        })
+        return res;
     }
 </script>
 
