@@ -66,7 +66,7 @@
                     + item.level + "</td><td>"
                     + new Date(item.birthday).toLocaleDateString() + "</td><td>"
                     + item.banned + "</td><td>"
-                    + "<button id='button_edit_" + item.id + "'>"
+                    + "<button id='button_edit_" + item.id + "' onclick='editAcc(" + item.id + ")'>"
                     + "<img src='/img/edit.png'>"
                     + "</button>" + "</td><td>"
                     + "<button id='button_delete_" + item.id + "' onclick='deleteAcc(" + item.id + ")'>"
@@ -116,6 +116,16 @@
                 show_list(getCurrentPage());
             }
         });
+    }
+
+    function editAcc(id) {
+        let identifier_edit = "#button_edit_" + id;
+        let identifier_delete = "#button_delete_" + id;
+
+        $(identifier_delete).remove();
+
+        let save_image_tag = "<img src='/img/save.png'>"
+        $(identifier_edit).html(save_image_tag);
     }
 
     function getCurrentPage() {
