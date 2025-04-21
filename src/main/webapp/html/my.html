@@ -69,10 +69,9 @@
                     + "<button id='button_edit_" + item.id + "'>"
                     + "<img src='/img/edit.png'>"
                     + "</button>" + "</td><td>"
-                    + "<button id='button_delete_" + item.id + "'>"
+                    + "<button id='button_delete_" + item.id + "' onclick='deleteAcc(" + item.id + ")'>"
                     + "<img src='/img/delete.png'>"
                     + "</button>" + "</td>"
-
                 ).appendTo("#table_1");
             });
         });
@@ -106,6 +105,27 @@
             }
         })
         return res;
+    }
+
+    function deleteAcc(id) {
+        let url = "/rest/players/" + id;
+        $.ajax({
+            url: url,
+            type: 'DELETE',
+            success: function () {
+                show_list(getCurrentPage());
+            }
+        });
+    }
+
+    function getCurrentPage() {
+        let current_page = 1;
+        $('button:parent(div)').each(function () {
+            if ($(this).css('color') === 'rgb(255,0,0)') {
+                current_page = $(this).text();
+            }
+        });
+        return parseInt(current_page) - 1;
     }
 </script>
 
