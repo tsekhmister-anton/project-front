@@ -84,6 +84,9 @@
 </select>
 <br><br>
 
+<span>
+    <button type="submit" onclick="createAcc()">Save</button>
+</span>
 <script>
     function show_list(page_number) {
 
@@ -210,6 +213,45 @@
 
     }
 
+    function createAcc() {
+        let value_name = $("#input_name_new").val();
+        let value_title = $("#input_title_new").val();
+        let value_race = $("#input_race_new").val();
+        let value_profession = $("#input_profession_new").val();
+        let value_level = $("#input_level_new").val();
+        let value_birthday = $("#input_birthday_new").val();
+        let value_banned = $("#input_banned_new").val();
+
+
+        let url = "/rest/players/";
+        $.ajax({
+            url: url,
+            type: 'POST',
+            dataType: 'json',
+            contentType: 'application/json;charset=UTF-8',
+            async: false,
+            data: JSON.stringify({
+                "name": value_name,
+                "title": value_title,
+                "race": value_race,
+                "profession": value_profession,
+                "banned": value_banned,
+                "level": value_level,
+                "birthday": new Date(value_birthday).getTime()
+            }),
+            success: function () {
+                $("#input_name_new").val("");
+                $("#input_title_new").val("");
+                $("#select_race_new").val("");
+                $("#select_profession_new").val("");
+                $("#select_level_new").val("");
+                $("#select_birthday_new").val("");
+                $("#select_banned_new").val("");
+                show_list(getCurrentPage(""));
+            }
+        });
+    }
+
     function saveAcc(id) {
         let value_name = $("#input_name_" + id).val();
         let value_title = $("#input_title_" + id).val();
@@ -224,7 +266,7 @@
             dataType: 'json',
             contentType: 'application/json;charset=UTF-8',
             async: false,
-            data: JSON.stringify({"name": value_name,
+            data: JSON.stringify({
                 "name": value_name,
                 "title": value_title,
                 "race": value_race,
